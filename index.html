@@ -143,6 +143,7 @@
           data: {
           answer: response,
         }
+      });
 
         this.timeline.push({
         type: jsPsychInstructions,
@@ -156,7 +157,7 @@
         allow_backward: false,
         button_label_next: "Continue"
            });
-
+/*
     //consent form info
         this.timeline.push ({
           type: jsPsychImageButtonResponse,
@@ -184,7 +185,7 @@
           choices: ['I consent', 'I do not consent'],
           prompt: "<p>Do you consent to participating in this experiment?</p>",
       });
-
+*/
        // this.timeline.push (firstWord);
 
         for (let i = 0; i < this.homophonousWords.length; i++) {
@@ -218,7 +219,9 @@
         this.timeline.push({
         type: jsPsychInstructions,
         pages: [
-        '<p>You have finished the experiment. Thank you for participating. Your response has been recorded. </p> <p> Your completion code is: CO0ERIKN </p> <p> Please go to https://app.prolific.com/submissions/complete?cc=CO0ERIKN',
+            '<p>You have finished the experiment. Thank you for participating. Your response has been recorded.</p>' +
+            '<p>Your completion code is: COG4A1RQ</p>' +
+            '<p>Please go to <a href="https://app.prolific.com/submissions/complete?cc=COG4A1RQ">https://app.prolific.com/submissions/complete?cc=COG4A1RQ</a></p>',
         ],
         show_clickable_nav: true,
         allow_backward: false,
@@ -422,40 +425,33 @@ addRound(targetWord, control) {
     }
     
     // A "test trial" shows the user a few target exemplars along with a few distractors, and asks the user to identify the target exemplars.
-    function createTestTrial(targetWord, targetExemplars, distractors, trialID) {
-      exemplars = targetExemplars.concat(distractors);
-      let permutation = shuffle(exemplars);
-      let targetPositions = [];
-      for (let i = 0; i < permutation.length; i++) {
+// Function to create the test trial
+// Function to create the test trial
+function createTestTrial(targetWord, targetExemplars, distractors, trialID) {
+    exemplars = targetExemplars.concat(distractors);
+    let permutation = shuffle(exemplars);
+    let targetPositions = [];
+    for (let i = 0; i < permutation.length; i++) {
         if (permutation[i] < targetExemplars.length) targetPositions.push(i);
-      }
+    }
 
-      let trialHTML = "";
-      for (let i = 0; i < this.exemplars.length; i++) {
+    let trialHTML = "";
+    for (let i = 0; i < exemplars.length; i++) {
         trialHTML += `<input type="checkbox" name="trial${trialID}-exemplar${i}" id="trial${trialID}-exemplar${i}" />`;
         trialHTML += `<label for="trial${trialID}-exemplar${i}"><img src="${exemplars[i]}" /></label>`;
-      }
-
-      // Add confirmation popup before submitting the test trial
-      let onSubmit = () => {
-        return confirm("Are you sure you selected all images that depict the word? If so, click OK.");
-      };
+    }
 
     return {
-      type: jsPsychSurveyHtmlForm,
-      preamble: `<p> <strong>Select all images that depict the word ${targetWord.text}.</strong></p>`,
-      html: trialHTML + "<br />",
-      data: {
-        exemplars: exemplars,
-        targetPositions: targetPositions,
-        targetExemplars: targetExemplars
-      },
-      on_finish: onSubmit // Execute the confirmation popup when the trial finishes
+        type: jsPsychSurveyHtmlForm,
+        preamble: `<p> <strong>Select all images that depict the word ${targetWord.text}.</strong></p>`,
+        html: trialHTML + "<br />",
+        data: {
+            exemplars: exemplars,
+            targetPositions: targetPositions,
+            targetExemplars: targetExemplars
+        },
     };
-  }
-
-
-
+}
 
     // An "instructions trial" precedes a test trial and warns the user what is coming next.
     function createInstructionsTrial(targetWord) {
